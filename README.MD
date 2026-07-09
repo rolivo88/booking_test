@@ -103,7 +103,7 @@ spring.datasource.username=<user>
 spring.datasource.password=<password>
 ```
 
-Si tus credenciales son distintas, edita `src/main/resources/application.properties` antes de ejecutar.
+Reemplazar variables <bd>, <user>, <password> en el archivo application.properties
 
 ---
 
