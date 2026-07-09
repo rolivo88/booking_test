@@ -103,7 +103,7 @@ spring.datasource.username=<user>
 spring.datasource.password=<password>
 ```
 
-Reemplazar variables <bd>, <user>, <password> en el archivo application.properties
+Reemplazar variables bd, user y password en el archivo application.properties
 
 ---
 
