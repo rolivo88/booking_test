@@ -1,0 +1,18 @@
+$kind: http-request
+url: "{{base_url}}/api/bookings/{{booking_id}}/status"
+method: PATCH
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "status": "CANCELLED"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status 200', () => pm.response.to.have.status(200));
+      pm.test('Estado es CANCELLED', () => pm.expect(pm.response.json().status).to.eql('CANCELLED'));
+    language: text/javascript
+order: 5000

@@ -1,0 +1,46 @@
+$kind: http-request
+url: "{{base_url}}/api/bookings"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "bookingCode": "BOOK-NEW-0010",
+      "issueDate": "2026-07-10",
+      "expirationDate": "2026-12-31",
+      "currency": "USD",
+      "incotermCode": "FOB",
+      "freightMode": "SEA",
+      "originCountry": "China",
+      "destinationCountry": "Chile",
+      "fobValue": 15000.00,
+      "supplierTaxId": "TAX-88000222-2",
+      "items": [
+        {
+          "sku": "SKU-NB-010",
+          "description": "Notebook empresarial",
+          "quantity": 10,
+          "unitPrice": 850.00
+        },
+        {
+          "sku": "SKU-MS-010",
+          "description": "Mouse wireless",
+          "quantity": 50,
+          "unitPrice": 25.00
+        }
+      ]
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      if (pm.response.code === 201) {
+          const json = pm.response.json();
+          pm.collectionVariables.set('booking_id', json.id);
+          pm.test('Estado es DRAFT', () => pm.expect(json.status).to.eql('DRAFT'));
+          pm.test('Tiene supplier', () => pm.expect(json.supplier).to.not.be.null);
+          pm.test('Tiene items', () => pm.expect(json.items.length).to.be.above(0));
+      }
+    language: text/javascript
+order: 1000

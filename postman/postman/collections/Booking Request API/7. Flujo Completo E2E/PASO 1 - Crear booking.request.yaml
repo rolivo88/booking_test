@@ -1,0 +1,38 @@
+$kind: http-request
+url: "{{base_url}}/api/bookings"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "bookingCode": "BOOK-E2E-001",
+      "issueDate": "2026-07-15",
+      "expirationDate": "2026-12-31",
+      "currency": "USD",
+      "incotermCode": "CIF",
+      "freightMode": "AIR",
+      "originCountry": "Germany",
+      "destinationCountry": "Chile",
+      "fobValue": 50000.00,
+      "supplierTaxId": "TAX-77000333-3",
+      "items": [
+        {
+          "sku": "SKU-MTR-E2E",
+          "description": "Motor industrial de prueba",
+          "quantity": 5,
+          "unitPrice": 1000.00
+        }
+      ]
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status 201', () => pm.response.to.have.status(201));
+      const json = pm.response.json();
+      pm.collectionVariables.set('booking_id', json.id);
+      pm.test('Estado es DRAFT', () => pm.expect(json.status).to.eql('DRAFT'));
+      pm.test('totalAmount calculado: 5000', () => pm.expect(json.items[0].totalAmount).to.eql(5000.00));
+    language: text/javascript
+order: 1000

@@ -1,0 +1,7 @@
+$kind: http-request
+url: "{{base_url}}/api/bookings?dateFrom=2026-01-01&dateTo=2026-12-31"
+method: GET
+queryParams:
+  dateFrom: 2026-01-01
+  dateTo: 2026-12-31
+order: 5000

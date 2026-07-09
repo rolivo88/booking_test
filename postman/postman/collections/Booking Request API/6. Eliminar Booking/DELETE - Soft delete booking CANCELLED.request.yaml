@@ -1,0 +1,4 @@
+$kind: http-request
+url: "{{base_url}}/api/bookings/3"
+method: DELETE
+order: 2000

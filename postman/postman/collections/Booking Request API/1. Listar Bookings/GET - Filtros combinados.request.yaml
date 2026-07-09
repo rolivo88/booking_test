@@ -1,0 +1,8 @@
+$kind: http-request
+url: "{{base_url}}/api/bookings?status=DRAFT&freightMode=SEA&taxId=TAX-88000222-2"
+method: GET
+queryParams:
+  status: DRAFT
+  freightMode: SEA
+  taxId: TAX-88000222-2
+order: 7000
