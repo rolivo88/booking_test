@@ -98,9 +98,9 @@ Carga 3 proveedores y 4 booking requests en distintos estados (DRAFT, CONFIRMED,
 La configuración en `application.properties` usa:
 
 ```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
-spring.datasource.username=postgres
-spring.datasource.password=Pro2588
+spring.datasource.url=jdbc:postgresql://localhost:5432/<bd>
+spring.datasource.username=<user>
+spring.datasource.password=<password>
 ```
 
 Si tus credenciales son distintas, edita `src/main/resources/application.properties` antes de ejecutar.
