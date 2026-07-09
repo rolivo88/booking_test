@@ -1,0 +1,13 @@
+$kind: http-request
+name: "PATCH - Error: actualizar booking CONFIRMED (422)"
+url: "{{base_url}}/api/bookings/2"
+method: PATCH
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "currency": "USD"
+    }
+order: 3000

@@ -1,0 +1,5 @@
+$kind: collection
+description: "Colección para probar la API REST de solicitudes de embarque. Flujo recomendado: Listar → Crear → Obtener → Actualizar → Confirmar → Cancelar → Eliminar."
+variables:
+  base_url: http://localhost:8080
+  booking_id: "1"

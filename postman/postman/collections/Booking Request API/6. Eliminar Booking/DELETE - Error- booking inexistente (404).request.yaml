@@ -1,0 +1,5 @@
+$kind: http-request
+name: "DELETE - Error: booking inexistente (404)"
+url: "{{base_url}}/api/bookings/99999"
+method: DELETE
+order: 4000

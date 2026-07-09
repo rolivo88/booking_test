@@ -1,0 +1,694 @@
+{
+  "info": {
+    "name": "Booking Request API",
+    "description": "Colección para probar la API REST de solicitudes de embarque. Flujo recomendado: Listar → Crear → Obtener → Actualizar → Confirmar → Cancelar → Eliminar.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "booking_id",
+      "value": "2",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Listar Bookings",
+      "item": [
+        {
+          "name": "GET - Listar todos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/bookings",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings"]
+            }
+          }
+        },
+        {
+          "name": "GET - Filtrar por status DRAFT",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/bookings?status=DRAFT",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings"],
+              "query": [
+                { "key": "status", "value": "DRAFT" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET - Filtrar por taxId",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/bookings?taxId=TAX-88000222-2",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings"],
+              "query": [
+                { "key": "taxId", "value": "TAX-88000222-2" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET - Filtrar por freightMode",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/bookings?freightMode=SEA",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings"],
+              "query": [
+                { "key": "freightMode", "value": "SEA" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET - Filtrar por rango de fechas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/bookings?dateFrom=2026-01-01&dateTo=2026-12-31",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings"],
+              "query": [
+                { "key": "dateFrom", "value": "2026-01-01" },
+                { "key": "dateTo", "value": "2026-12-31" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET - Filtrar por bookingCode",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/bookings?bookingCode=BOOK-TEST-0001",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings"],
+              "query": [
+                { "key": "bookingCode", "value": "BOOK-TEST-0001" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET - Filtros combinados",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/bookings?status=DRAFT&freightMode=SEA&taxId=TAX-88000222-2",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings"],
+              "query": [
+                { "key": "status", "value": "DRAFT" },
+                { "key": "freightMode", "value": "SEA" },
+                { "key": "taxId", "value": "TAX-88000222-2" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Crear Booking",
+      "item": [
+        {
+          "name": "POST - Crear booking exitoso",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const json = pm.response.json();",
+                  "    pm.collectionVariables.set('booking_id', json.id);",
+                  "    pm.test('Estado es DRAFT', () => pm.expect(json.status).to.eql('DRAFT'));",
+                  "    pm.test('Tiene supplier', () => pm.expect(json.supplier).to.not.be.null);",
+                  "    pm.test('Tiene items', () => pm.expect(json.items.length).to.be.above(0));",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"bookingCode\": \"BOOK-NEW-0100\",\n  \"issueDate\": \"2026-07-10\",\n  \"expirationDate\": \"2026-12-31\",\n  \"currency\": \"USD\",\n  \"incotermCode\": \"FOB\",\n  \"freightMode\": \"SEA\",\n  \"originCountry\": \"China\",\n  \"destinationCountry\": \"Chile\",\n  \"fobValue\": 15000.00,\n  \"supplierTaxId\": \"TAX-88000222-2\",\n  \"items\": [\n    {\n      \"sku\": \"SKU-NB-010\",\n      \"description\": \"Notebook empresarial\",\n      \"quantity\": 10,\n      \"unitPrice\": 850.00\n    },\n    {\n      \"sku\": \"SKU-MS-010\",\n      \"description\": \"Mouse wireless\",\n      \"quantity\": 50,\n      \"unitPrice\": 25.00\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/bookings",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings"]
+            }
+          }
+        },
+        {
+          "name": "POST - Error: proveedor inexistente (404)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"bookingCode\": \"BOOK-ERR-001\",\n  \"issueDate\": \"2026-07-10\",\n  \"expirationDate\": \"2026-12-31\",\n  \"currency\": \"USD\",\n  \"incotermCode\": \"FOB\",\n  \"freightMode\": \"SEA\",\n  \"originCountry\": \"China\",\n  \"destinationCountry\": \"Chile\",\n  \"fobValue\": 1000.00,\n  \"supplierTaxId\": \"INEXISTENTE-999\",\n  \"items\": [\n    {\n      \"sku\": \"SKU-001\",\n      \"description\": \"Producto\",\n      \"quantity\": 1,\n      \"unitPrice\": 100.00\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/bookings",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings"]
+            }
+          }
+        },
+        {
+          "name": "POST - Error: sin ítems (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"bookingCode\": \"BOOK-ERR-002\",\n  \"issueDate\": \"2026-07-10\",\n  \"expirationDate\": \"2026-12-31\",\n  \"currency\": \"USD\",\n  \"incotermCode\": \"FOB\",\n  \"freightMode\": \"SEA\",\n  \"originCountry\": \"China\",\n  \"destinationCountry\": \"Chile\",\n  \"fobValue\": 1000.00,\n  \"supplierTaxId\": \"TAX-88000222-2\",\n  \"items\": []\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/bookings",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings"]
+            }
+          }
+        },
+        {
+          "name": "POST - Error: fecha vencida (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"bookingCode\": \"BOOK-ERR-003\",\n  \"issueDate\": \"2025-01-01\",\n  \"expirationDate\": \"2025-06-30\",\n  \"currency\": \"USD\",\n  \"incotermCode\": \"FOB\",\n  \"freightMode\": \"SEA\",\n  \"originCountry\": \"China\",\n  \"destinationCountry\": \"Chile\",\n  \"fobValue\": 1000.00,\n  \"supplierTaxId\": \"TAX-88000222-2\",\n  \"items\": [\n    {\n      \"sku\": \"SKU-001\",\n      \"description\": \"Producto\",\n      \"quantity\": 1,\n      \"unitPrice\": 100.00\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/bookings",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Obtener por ID",
+      "item": [
+        {
+          "name": "GET - Obtener booking por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Tiene supplier', () => pm.expect(pm.response.json().supplier).to.not.be.null);",
+                  "pm.test('Tiene items', () => pm.expect(pm.response.json().items.length).to.be.above(0));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/bookings/{{booking_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings", "{{booking_id}}"]
+            }
+          }
+        },
+        {
+          "name": "GET - Error: booking inexistente (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/bookings/99999",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings", "99999"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Actualizar Booking",
+      "item": [
+        {
+          "name": "PATCH - Actualizar todos los campos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Estado sigue siendo DRAFT', () => pm.expect(pm.response.json().status).to.eql('DRAFT'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"issueDate\": \"2026-08-01\",\n  \"expirationDate\": \"2027-01-31\",\n  \"fobValue\": 20000.00,\n  \"currency\": \"EUR\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/bookings/{{booking_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings", "{{booking_id}}"]
+            }
+          }
+        },
+        {
+          "name": "PATCH - Actualizar solo fobValue",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"fobValue\": 25000.00\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/bookings/{{booking_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings", "{{booking_id}}"]
+            }
+          }
+        },
+        {
+          "name": "PATCH - Error: actualizar booking CONFIRMED (422)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"currency\": \"USD\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/bookings/3",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings", "2"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Cambiar Estado",
+      "item": [
+        {
+          "name": "PATCH - DRAFT a CONFIRMED",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Estado es CONFIRMED', () => pm.expect(pm.response.json().status).to.eql('CONFIRMED'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"status\": \"CONFIRMED\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/bookings/{{booking_id}}/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings", "{{booking_id}}", "status"]
+            }
+          }
+        },
+        {
+          "name": "PATCH - CONFIRMED a CANCELLED",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Estado es CANCELLED', () => pm.expect(pm.response.json().status).to.eql('CANCELLED'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"status\": \"CANCELLED\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/bookings/2/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings", "2", "status"]
+            }
+          }
+        },
+        {
+          "name": "PATCH - Error: CANCELLED es estado terminal (422)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"status\": \"CONFIRMED\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/bookings/3/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings", "3", "status"]
+            }
+          }
+        },
+        {
+          "name": "PATCH - Error: booking inexistente (404)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"status\": \"CONFIRMED\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/bookings/99999/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings", "99999", "status"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Eliminar Booking",
+      "item": [
+        {
+          "name": "DELETE - Soft delete booking DRAFT",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 204', () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/bookings/{{booking_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings", "{{booking_id}}"]
+            }
+          }
+        },
+        {
+          "name": "DELETE - Soft delete booking CANCELLED",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/bookings/3",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings", "3"]
+            }
+          }
+        },
+        {
+          "name": "DELETE - Error: booking CONFIRMED no se puede eliminar (422)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/bookings/2",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings", "2"]
+            }
+          }
+        },
+        {
+          "name": "DELETE - Error: booking inexistente (404)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/bookings/99999",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings", "99999"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Flujo Completo E2E",
+      "item": [
+        {
+          "name": "PASO 1 - Crear booking",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "pm.collectionVariables.set('booking_id', json.id);",
+                  "pm.test('Estado es DRAFT', () => pm.expect(json.status).to.eql('DRAFT'));",
+                  "pm.test('totalAmount calculado: 5000', () => pm.expect(json.items[0].totalAmount).to.eql(5000.00));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"bookingCode\": \"BOOK-E2E-001\",\n  \"issueDate\": \"2026-07-15\",\n  \"expirationDate\": \"2026-12-31\",\n  \"currency\": \"USD\",\n  \"incotermCode\": \"CIF\",\n  \"freightMode\": \"AIR\",\n  \"originCountry\": \"Germany\",\n  \"destinationCountry\": \"Chile\",\n  \"fobValue\": 50000.00,\n  \"supplierTaxId\": \"TAX-77000333-3\",\n  \"items\": [\n    {\n      \"sku\": \"SKU-MTR-E2E\",\n      \"description\": \"Motor industrial de prueba\",\n      \"quantity\": 5,\n      \"unitPrice\": 1000.00\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/bookings",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings"]
+            }
+          }
+        },
+        {
+          "name": "PASO 2 - Obtener booking creado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Supplier presente', () => pm.expect(pm.response.json().supplier).to.not.be.null);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/bookings/{{booking_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings", "{{booking_id}}"]
+            }
+          }
+        },
+        {
+          "name": "PASO 3 - Actualizar fobValue y currency",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('fobValue actualizado', () => pm.expect(pm.response.json().fobValue).to.eql(60000.00));",
+                  "pm.test('currency actualizada a EUR', () => pm.expect(pm.response.json().currency).to.eql('EUR'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"fobValue\": 60000.00,\n  \"currency\": \"EUR\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/bookings/{{booking_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings", "{{booking_id}}"]
+            }
+          }
+        },
+        {
+          "name": "PASO 4 - Confirmar booking",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Estado es CONFIRMED', () => pm.expect(pm.response.json().status).to.eql('CONFIRMED'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"status\": \"CONFIRMED\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/bookings/{{booking_id}}/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings", "{{booking_id}}", "status"]
+            }
+          }
+        },
+        {
+          "name": "PASO 5 - Cancelar booking",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Estado es CANCELLED', () => pm.expect(pm.response.json().status).to.eql('CANCELLED'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"status\": \"CANCELLED\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/bookings/{{booking_id}}/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings", "{{booking_id}}", "status"]
+            }
+          }
+        },
+        {
+          "name": "PASO 6 - Eliminar booking (soft delete)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 204', () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/bookings/{{booking_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings", "{{booking_id}}"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

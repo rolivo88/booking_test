@@ -1,0 +1,30 @@
+$kind: http-request
+name: "POST - Error: proveedor inexistente (404)"
+url: "{{base_url}}/api/bookings"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "bookingCode": "BOOK-ERR-001",
+      "issueDate": "2026-07-10",
+      "expirationDate": "2026-12-31",
+      "currency": "USD",
+      "incotermCode": "FOB",
+      "freightMode": "SEA",
+      "originCountry": "China",
+      "destinationCountry": "Chile",
+      "fobValue": 1000.00,
+      "supplierTaxId": "INEXISTENTE-999",
+      "items": [
+        {
+          "sku": "SKU-001",
+          "description": "Producto",
+          "quantity": 1,
+          "unitPrice": 100.00
+        }
+      ]
+    }
+order: 2000

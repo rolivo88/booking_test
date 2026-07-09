@@ -1,0 +1,30 @@
+$kind: http-request
+name: "POST - Error: fecha vencida (400)"
+url: "{{base_url}}/api/bookings"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "bookingCode": "BOOK-ERR-003",
+      "issueDate": "2025-01-01",
+      "expirationDate": "2025-06-30",
+      "currency": "USD",
+      "incotermCode": "FOB",
+      "freightMode": "SEA",
+      "originCountry": "China",
+      "destinationCountry": "Chile",
+      "fobValue": 1000.00,
+      "supplierTaxId": "TAX-88000222-2",
+      "items": [
+        {
+          "sku": "SKU-001",
+          "description": "Producto",
+          "quantity": 1,
+          "unitPrice": 100.00
+        }
+      ]
+    }
+order: 4000

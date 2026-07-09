@@ -1,0 +1,6 @@
+$kind: http-request
+url: "{{base_url}}/api/bookings?bookingCode=BOOK-TEST-0001"
+method: GET
+queryParams:
+  bookingCode: BOOK-TEST-0001
+order: 6000

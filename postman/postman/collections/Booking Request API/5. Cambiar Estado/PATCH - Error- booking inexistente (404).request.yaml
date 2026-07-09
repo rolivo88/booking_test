@@ -1,0 +1,13 @@
+$kind: http-request
+name: "PATCH - Error: booking inexistente (404)"
+url: "{{base_url}}/api/bookings/99999/status"
+method: PATCH
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "status": "CONFIRMED"
+    }
+order: 4000

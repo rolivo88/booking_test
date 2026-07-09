@@ -1,0 +1,12 @@
+$kind: http-request
+url: "{{base_url}}/api/bookings/{{booking_id}}"
+method: PATCH
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "fobValue": 25000.00
+    }
+order: 2000

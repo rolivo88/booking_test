@@ -1,0 +1,20 @@
+$kind: http-request
+url: "{{base_url}}/api/bookings/{{booking_id}}"
+method: PATCH
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "fobValue": 60000.00,
+      "currency": "EUR"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status 200', () => pm.response.to.have.status(200));
+      pm.test('fobValue actualizado', () => pm.expect(pm.response.json().fobValue).to.eql(60000.00));
+      pm.test('currency actualizada a EUR', () => pm.expect(pm.response.json().currency).to.eql('EUR'));
+    language: text/javascript
+order: 3000

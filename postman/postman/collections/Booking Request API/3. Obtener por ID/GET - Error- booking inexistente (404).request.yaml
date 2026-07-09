@@ -1,0 +1,5 @@
+$kind: http-request
+name: "GET - Error: booking inexistente (404)"
+url: "{{base_url}}/api/bookings/99999"
+method: GET
+order: 2000

@@ -1,0 +1,21 @@
+$kind: http-request
+url: "{{base_url}}/api/bookings/{{booking_id}}"
+method: PATCH
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "issueDate": "2026-08-01",
+      "expirationDate": "2027-01-31",
+      "fobValue": 20000.00,
+      "currency": "EUR"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status 200', () => pm.response.to.have.status(200));
+      pm.test('Estado sigue siendo DRAFT', () => pm.expect(pm.response.json().status).to.eql('DRAFT'));
+    language: text/javascript
+order: 1000

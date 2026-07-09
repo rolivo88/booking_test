@@ -1,0 +1,5 @@
+$kind: http-request
+name: "DELETE - Error: booking CONFIRMED no se puede eliminar (422)"
+url: "{{base_url}}/api/bookings/2"
+method: DELETE
+order: 3000
