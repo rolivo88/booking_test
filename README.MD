@@ -72,15 +72,15 @@ CANCELLED  (estado terminal — sin más transiciones)
 Conéctate a PostgreSQL y ejecuta:
 
 ```sql
-CREATE DATABASE postgres;
+CREATE DATABASE booking;
 ```
 
-> Si ya existe la base de datos `postgres` (por defecto en instalaciones locales), puedes omitir este paso.
+> Si ya existe la base de datos `booking` (por defecto en instalaciones locales), puedes omitir este paso.
 
 ### 2. Ejecutar el schema
 
 ```bash
-psql -U postgres -d postgres -f sql/schema.sql
+psql -U postgres -d booking -f sql/schema.sql
 ```
 
 Esto crea las tablas `supplier`, `booking_request` y `booking_item` con sus índices y constraints.
@@ -88,7 +88,7 @@ Esto crea las tablas `supplier`, `booking_request` y `booking_item` con sus índ
 ### 3. Cargar datos de prueba (opcional)
 
 ```bash
-psql -U postgres -d postgres -f sql/data.sql
+psql -U postgres -d booking -f sql/data.sql
 ```
 
 Carga 3 proveedores y 4 booking requests en distintos estados (DRAFT, CONFIRMED, CANCELLED) con sus ítems correspondientes.
